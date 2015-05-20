@@ -1,0 +1,26 @@
+design.txt
+
+My project is a geometric music generator, a copy of the app NodeBeat.
+Users can compose unique audio loops by placing squares (players) and circles
+(notes) near each other. Each combination of squares and circles produces
+different sounds. The circles closest to a square play first, and then farther 
+circles play.
+
+The user can also modify his or her composition's key, scale, and tempo using
+on-screen settings. He or she can control how many times the audio loops as 
+well.
+
+To accomplish audio, I generated 3 octaves of sine waves and saved them in a
+data directory. I also took percussive sound effects from the original NodeBeat
+app. Each player creates a different octave of sound, or percussive sounds. Each
+note holds its scale degree as a number between 1 and 7. When a connection forms
+between a player and a note, the connection analyzes the player's octave, the
+note's scale degree, the current composition's key and scale, and the distance
+between the player and the note. From this analysis (which happens in the
+Connection class's getNumericalName() function, and is probably the most
+important part and complicated part of my project), the connection creates the 
+path to the right sound file and figures out on which subdivision it plays. 
+When playing the audio, the app loops through the list of connections, checks if
+the current subdivision matches a connection's subdivision, and plays any
+connection's matching sound file. Every time the user changes the scale or key, 
+all connections re-initialize with the new properties.

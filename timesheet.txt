@@ -1,0 +1,160 @@
+timesheet.txt
+
+7 Nov###########################################################################
+11:30am-1:30pm (2 hours): Got an audio module to work
+    - Attempted to install PyMedia, PyAudio, and Pyo, none of which worked
+        - Pyo would have allowed for synthesis within Python, but alas...
+    - Successfully ran WinSound
+        - Audio files could be played one at a time, but they could not overlap
+    - Successfully installed PyGame
+        - http://www.pygame.org/
+        - Required uninstalling and reinstalling Python and Canopy, then 
+            reinstalling PyGame
+        - Used "A tutorial for sound in PyGame" to play demo sounds
+            - http://www.pygame.org/wiki/tutorials
+    - Generated several notes using Audacity
+        - http://audacity.sourceforge.net/
+        - Created 1-second sine waves of A4, B4, and Db4, exported as .wav files
+            - Used frequency values from Michigan Tech's "Frequencies for 
+                equal-tempered scale, A4 = 440 Hz"
+                - http://www.phy.mtu.edu/~suits/notefreqs.html
+            - Can't use # (e.g., C#) because Python interprets this as a comment
+        - Experimented with fading sounds in and out to make them more pleasant
+            - Good sonuding fade: "Studio fade in" first 20%, out last 80%
+    - Adapted code from "A tutorial for sound in PyGame" to play the sounds I
+        had generated
+        - http://www.pygame.org/wiki/tutorials
+        - Implemented noteList to hold names of notes: ['A4', 'B4',...]
+        - Saved note .wav files in \data\, accessed them using os module
+        - Used PyGame clock to make different sequences of notes
+
+3:00pm-4:30pm (1.5 hours): Wrote Note class, improved sound tones
+    - Note class holds sound, mixer, channel and can play itself
+    - My roommate (a music major) told me I should use "Just" tempered scale 
+        frequencies instead of "Equal" tempered, used these instead:
+        - http://www.phy.mtu.edu/~suits/scales.html
+
+11/8############################################################################
+12:30pm-1:00pm (0.5 hours): Eliminated some clipping, generated random sequences
+    - Realized that ugly static when two sounds were played at once was not 
+        interference between perfect sine waves, but was caused by clipping
+        - Regenerated pentatonic scale from C4 to C5 with amplitudes much
+            smaller, allowing two to play at once without clipping
+    - Added self.time to Note class, allowing a Note to hold when it will play
+        - In the playing loop, check if any note matches the current time, and
+            play it if it does
+
+11/18###########################################################################
+12:30pm-2:00pm (1.5 hours): Migrated code to event based animation class
+    - Created NodeBeat class
+    - Modified rhythm structure to include beats, subdivions, and tempo
+        - Each Note holds a subdivision at which it is played
+    - Found API that could analyze key and tempo for me:
+        - http://developer.echonest.com/tutorial-overview.html
+
+11/19###########################################################################
+11:30am-1:00pm (1.5 hours): Modified random music generation
+
+6:00pm-8:00pm (2 hours): Project Proposal, Competitive Analysis, Storyboard
+
+11/22###########################################################################
+2:00pm-4:00pm (2 hours): Created KosBeat.py
+    - Wrote KosBeat class, extending EventBasedAnimationClass
+        - On each mouse click in a blank location, a node appears
+        - The nodes cycle in ascending order through the notes of a given key,
+            scale, and octave
+        - When the user clicks an existing node, it plays its sound
+    - Generated two more octaves of note wav files, now have octaves 3 - 5
+        - Changed naming scheme of wav files: "noteNumber-octave.wav"
+    - Wrote Node class
+        - Each Node takes in a set of coordinates, radius, key, scale, degree, 
+            octave, and a channel
+            - Node objects sets up audio in the given channel, generating the
+                corresponding filename from the key, scale, degree, and octave
+                - Each type of scale is represented as a list of numbers in 
+                    the key of C, the Node shifts the notes to the given key
+
+11/23###########################################################################
+9:00pm-11:00pm (2 hours): Created MenuNode class
+    - Drew rectangular menu of MenuNodes at top of screen
+    - When the user clicks a MenuNode, the MenuNode sets KosBeat class's active
+        degree and color. The next Node drawn uses those active parameters.
+        - The MenuNode selection sustains until a different MenuNode is clicked
+
+11/25###########################################################################
+9:00am-10:00am (1 hour): Create MenuPlayer class
+    - Added MenuPlayers to menu at top of screen
+    - When the user clicks a MenuPlayer, the KosBeat's active type changes to 
+        "Player" with the MenuPlayer's associated octave and color properties,
+        or "Node" if a MenuNode was selected
+
+11/26###########################################################################
+1:30pm-2:30pm (1 hour): Created Player class and started Connection class
+    - Players are squares that hold octaves and 8 rings of increasing size for
+        each of the 8 subdivisions surround them
+    - A Connection is created when a Node is close enough to a Player, and is
+        drawn as a line between the Node and the Player
+        - The Connection holds the Player's octave, the Node's numerical note,
+            and the ring's subdivision. When the loop begins, the Connections
+            are what actually get played!
+
+5:00pm-6:30pm (1.5 hours): Made Connections hold sounds
+    - Transferred all sound file information from Nodes to Connections
+    - Set number of channels in the audio mixer to 32 temporarily
+        - This prevents collisions when two sounds have to play at the same
+            time on the same channel
+        - Later, the number of channels will update as needed whenever new
+            Connections are made
+
+11/29###########################################################################
+1:30pm-2:00pm (0.5 hours): Short user test with family
+    - Definitely need help/info screen
+    - Drag and drop, undo/redo, delete/edit things already on screen
+    - People tend to make things that look nice, choosing different things than
+        I did in all of my tests because they 
+3:30pm-5:30pm (2 hours): Enabled looping, added percussion, changed window title
+    - Enabled looping with self.isPlaying, which is toggled by the space bar
+        - Currently the app must finish its loop before it can stop, may 
+            investigate this issue further, but may not. Checking onKeyPressed()
+            mid-loop may be impossible.
+    - Borrowed percussion sounds from original NodeBeat data directory
+        - http://nodebeat.com/
+        - Adjusted volume and copied and pasted
+
+11/30###########################################################################
+9:30pm-10:30pm (1 hour): Undo/Redo, ScaleDict.py, more user testing
+    - Undo with 'u', redo with 'r'
+    - ScaleDict.py holds scaleDict, which is imported at top of KosBeat.py
+        - Is this a global dict? Is that a problem?
+    - Definitely need drag and drop
+    - User suggestion: for presentation, use a pre-defined song layout
+
+# Change settings in UI! Home screen! Help screen! Drag and drop!
+
+12/1############################################################################
+8:30pm-10:30pm (2 hours): More user testing, mentor meeting, drag and drop
+    - Brushed up undo/redo a little
+    - Enabled drag and drop of nodes already on the screen
+    - Attempted to fix audio loop asynchronization with no luck
+        - Suggestions from Robert to time.sleep within the loop, didn't work
+    - Everyone uses the program differently, probably because I don't have an
+        instructions screen. I make layouts that tend to go ascending order and
+        test lots of notes, players, and subdivisions. Others make symmetrical
+        designs that look nice. Others choose complementing colors. Others try 
+        to compose beats to rap over. Most people think it's cool.
+
+12/3-12/4#######################################################################
+~10 hours: The final push
+    - Translated key, scale, and tempo settings to the user interface
+        - On user recommendation, added a slider to set the number of loops that
+            play
+    - Added clear screen button
+    - Debugging and user testing
+    - Design documents
+    - Video
+    - Submission
+
+
+
+
+                    
